@@ -17,4 +17,18 @@ app.post('/games', async (req, res) => {
   }
 });
 
+app.get('/games', async (req, res) => {
+  try {
+    res.status(200).json([
+      {
+        title: 'Pacman', // required
+        genre: 'Arcade', // required
+        releaseYear: 1980, // not required
+      },
+    ]);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
 module.exports = app;

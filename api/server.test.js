@@ -47,7 +47,13 @@ describe('Express app', () => {
 
     it('returns an array', async () => {
       const gamesArr = await request(app).get('/games');
-      await expect(gamesArr).toBe(typeof array);
+      await expect(Array.isArray(JSON.parse(gamesArr.text))).toBeTruthy();
+    });
+
+    it('has a JSON content type header', () => {
+      return request(app)
+        .get('/games')
+        .expect('Content-Type', /json/i);
     });
   });
 });
