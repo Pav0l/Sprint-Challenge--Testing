@@ -1,7 +1,16 @@
 const app = require('./server');
 const request = require('supertest');
+const { db } = require('../data/dbQueries');
+
+afterEach(async () => {
+  await db('games').truncate();
+});
 
 describe('Express app', () => {
+  it('is the right environment', () => {
+    expect(process.env.DB_ENV).toBe('testing');
+  });
+
   describe('[POST] /games endpoint', () => {
     it('should respond with 422 status code if required fields are missing in req.body', () => {
       return request(app)
@@ -18,23 +27,38 @@ describe('Express app', () => {
       return request(app)
         .post('/games')
         .send({
-          title: 'Pacman', // required
+          title: 'Blabla', // required
           genre: 'Arcade', // required
           releaseYear: 1980, // not required
         })
         .expect(200);
     });
 
-    it('will create new game', () => {
-      const gameCreated = { message: 'Game created.' };
-      return request(app)
+    it('will create new game', async () => {
+      await request(app)
         .post('/games')
         .send({
-          title: 'Pacman', // required
+          title: 'Pokemon', // required
           genre: 'Arcade', // required
           releaseYear: 1980, // not required
+        });
+      expect(/game created/i);
+    });
+
+    it('checks if game title is unique', async () => {
+      await request(app)
+        .post('/games')
+        .send({
+          title: 'Joker', // required
+          genre: 'Cards', // required
+        });
+      await request(app)
+        .post('/games')
+        .send({
+          title: 'Joker', // required
+          genre: 'Cards', // required
         })
-        .expect(gameCreated);
+        .expect(/unique/);
     });
   });
 
