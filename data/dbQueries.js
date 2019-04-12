@@ -19,4 +19,5 @@ function getAll() {
 module.exports = {
   insert,
   getAll,
+  db,
 };
