@@ -24,5 +24,17 @@ describe('Express app', () => {
         })
         .expect(200);
     });
+
+    it('will create new game', () => {
+      const gameCreated = { message: 'Game created.' };
+      return request(app)
+        .post('/games')
+        .send({
+          title: 'Pacman', // required
+          genre: 'Arcade', // required
+          releaseYear: 1980, // not required
+        })
+        .expect(gameCreated);
+    });
   });
 });
