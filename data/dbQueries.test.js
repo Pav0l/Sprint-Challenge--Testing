@@ -1,9 +1,5 @@
 const { db, getAll, insert } = require('./dbQueries');
 
-beforeEach(async () => {
-  await db('games').truncate();
-});
-
 afterEach(async () => {
   await db('games').truncate();
 });
